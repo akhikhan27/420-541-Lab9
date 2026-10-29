@@ -29,7 +29,25 @@ public class AIController : MonoBehaviour
 
 
     // Add State Machine code Here
-
+    public StateMachine StateMachine {get; private set;}
+    void Start()
+    {
+        Agent = GetComponent<NavMeshAgent>();
+        aiAnimationController = GetComponent<AIAnimationController>();
+        // Animator = GetComponent<Animator>(); // Commented out since we're not
+        //using animations
+        StateMachine = new StateMachine();
+        StateMachine.AddState(new IdleState(this));
+        StateMachine.AddState(new PatrolState(this));
+        StateMachine.AddState(new ChaseState(this));
+        StateMachine.AddState(new AttackState(this)); // Add the new AttackState
+        StateMachine.TransitionToState(StateType.Idle);
+    }
+    void Update()
+    {
+        StateMachine.Update();
+        currentState = StateMachine.GetCurrentStateType();
+    }
 
     
     // 
